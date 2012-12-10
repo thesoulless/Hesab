@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% block head %}{% endblock %}
+	<!--<script type="text/javascript" src="jquery.js"></script>-->
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+	<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+		{% if title == 'Login' %}
+			background: #49a5bf; /* Old browsers */
+		{% endif %}
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }	  
+    </style>
+    <link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet">	
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="modal fade hide" id="about">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>About</h3>
+		</div>
+		<div class="modal-body">
+			<p>Made by love and some other useful tools (Twitter Bootstrap, Smarty, etc.).</p>
+			</div>
+			<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Close</button>
+		</div>
+    </div>
+	
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+			  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </a>
+			  <a class="brand" href="#">{{ project_name }}</a>
+			  <div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				  <i class="icon-user"></i> {% if title == 'Login' %} Guest {% else %} {{ username }} {% endif %}
+				  <span class="caret"></span>
+				</a>
+				{% if title != 'Login' %}
+					<ul class="dropdown-menu">
+					  <!--<li><a href="#">Profile</a></li>
+					  <li class="divider"></li>-->				  
+					  <li><a href="{$baseURL}?logout"><i class="icon-off"></i> Logout</a></li>				  
+					</ul>
+				{% endif %}
+			  </div>
+			  <div class="nav-collapse">
+				<ul class="nav">
+				  <li class="active"><a href="{$baseURL}">Home</a></li>
+				  <li><a data-toggle="modal" href="#about">About</a></li>
+				</ul>
+			  </div><!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span3">
+				{% if title != 'Login' %}
+				  <div class="well sidebar-nav">
+					<ul class="nav nav-list">
+					  <li class="nav-header">Hesab</li>
+					  <li class="{if $title eq 'Home'}active{/if}"><a href="{$baseURL}"><i class="icon-home"></i> Home</a></li>
+					  <li class="{if $title eq 'Category'}active{/if}"><a href="{$baseURL}addcat.php"><i class="icon-tags"></i> Categories</a></li>
+					  <li class="{if $title eq 'Stats'}active{/if}"><a href="{$baseURL}stats.php"><i class="icon-tasks"></i> Stats</a></li>
+					  <li class="{if $title eq 'Setting'}active{/if}"><a href="{$baseURL}setting.php"><i class="icon-cog"></i> Settings</a></li>
+					  <li class="{if $title eq 'Profile'}active{/if}"><a href="{$baseURL}profile.php"><i class="icon-user"></i> Profile</a></li>
+					</ul>
+				  </div><!--/.well -->	
+				{% endif %}
+			</div><!--/span-->
+
+			{% block body %}{% endblock %}
+
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "login_base.html" %}
+{% comment %}
+
+Login page to authenticate users.
+
+{% endcomment %}
+
+{% block head %}
+    <title>Django Consultants | Login</title>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="span1"></div>
+            <div class="span4 offset5" style="">                        
+                <div class="well">
+                    <div class="alert">
+                        <strong>Warning!</strong> {{ login_warning }}
+                    </div>
+                    <form method="post" action=".">
+                        {% csrf_token %}
+                        <fieldset>
+                            <legend>Login: </legend>
+                            <div class="control-group">
+                                <label class="control-label" for="username">Username : </label>
+                                <div class="controls">
+                                    {{ form.username }}
+                                </div>
+                                <label class="control-label" for="password">Password : </label>
+                                <div class="controls">
+                                    {{ form.password }}
+                                </div>
+                            </div>
+                            {% if next %}
+                                <input type="hidden" name="next" value="{{ next }}" />
+                            {% else %}
+                                <input type="hidden" name="next" value="/" />
+                            {% endif %}
+                            <button id="submit" type="submit" name="submit" class="btn btn-primary" value="login">Login</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>                        
+    </div>
+{% endblock %}

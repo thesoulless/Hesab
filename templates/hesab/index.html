@@ -1,0 +1,154 @@
+{% extends "login_base.html" %}
+{% comment %}
+
+Main page of django_consultant's website.
+
+{% endcomment %}
+
+{% block head %}
+    <title>Django Consultants</title>
+{% endblock %}
+
+{% block body %}
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span9" style="">
+				{% if login_message %}
+				<div>
+					<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{{ login_message }}</div>
+				</div>
+				{% endif %}
+				{% if login_warning %}
+				<div class="alert">
+					<strong>Warning!</strong> {{login_warning}}
+				</div>
+				{% endif %}
+
+				<form method="post" action="{$SCRIPT_NAME}" class="form-horizontal">
+					<fieldset>
+					<legend>Purchase submit:</legend>
+					{% if success_message != Null %}
+					<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>
+						<strong>Well done!</strong> {{ success_message }}
+					</div>
+					{% endif %}
+					<div class="control-group">
+						<label class="control-label" for="one">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="one" name="one" type="text" />					
+							<select name="one-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="one-dp" readonly>
+							</div>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="two">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="two" name="two" type="text" />											
+							<select name="two-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="two-dp" readonly>
+							</div>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="three">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="three" name="three" type="text" />
+							<select name="three-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="three-dp" readonly>
+							</div>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="four">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="four" name="four" type="text" />
+							<select name="four-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="four-dp" readonly>
+							</div>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="five">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="five" name="five" type="text" />
+							<select name="five-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="five-dp" readonly>
+							</div>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="six">Cost: </label>
+						<div class="controls">
+							<input class="input-medium ltr" id="six" name="six" type="text" />
+							<!--<span class="add-on">﷼</span>-->
+							<select name="six-cat">
+							{% for cat in categories %}
+									<option value="{{ cat.cat }}">{{ cat.cat_display }}</option>
+							{% endfor %}
+							</select>
+
+							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">
+								<span class="add-on"><i class="icon-th"></i></span>
+								<input class="span2 date-input" size="16" type="text" value="{$today}" name="six-dp" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button id="submit" type="submit" class="btn btn-primary" name="submit">Submit</button>
+						<button class="btn">Cancel</button>
+					</div>
+					</fieldset>
+				</form>					  
+			</div>
+		</div>			  			  
+	</div>
+    <!--<header>
+        <h1>Django Consultants</h1>
+    </header>
+
+    <section>
+        <p>Welcome to Django Consultants. Please click <a href="/login/">here</a> to log into our web portal.</p>
+    </section>-->
+{% endblock %}
