@@ -36,7 +36,7 @@
 			<h3>About</h3>
 		</div>
 		<div class="modal-body">
-			<p>Made by love and some other useful tools (Twitter Bootstrap, Smarty, etc.).</p>
+			<p>Made by love and some other useful tools (<a href="https://docs.djangoproject.com/">Django</a>, <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> & etc.).</p>
 			</div>
 			<div class="modal-footer">
 			<button class="btn" data-dismiss="modal">Close</button>
@@ -61,13 +61,13 @@
 					<ul class="dropdown-menu">
 					  <!--<li><a href="#">Profile</a></li>
 					  <li class="divider"></li>-->				  
-					  <li><a href="{{ SITE_ROOT }}/logout/"><i class="icon-off"></i> Logout</a></li>				  
+					  <li><a href="{% url hesab.views.logout_page %}"><i class="icon-off"></i> Logout</a></li>				  
 					</ul>
 				{% endif %}
 			  </div>
 			  <div class="nav-collapse">
 				<ul class="nav">
-				  <li class="active"><a href="{$baseURL}">Home</a></li>
+				  <li class="active"><a href="{% url hesab.views.main_page %}">Home</a></li>
 				  <li><a data-toggle="modal" href="#about">About</a></li>
 				</ul>
 			  </div><!--/.nav-collapse -->
@@ -81,11 +81,9 @@
 				<div class="well sidebar-nav">
 					<ul class="nav nav-list">
 						<li class="nav-header">Hesab</li>
-						<li class="{%if title == 'Home' %}active{% endif %}"><a href="{{SITE_ROOT}}"><i class="icon-home"></i> Home</a></li>
-						<li class="{% if title == 'Category' %} active {% endif %}"><a href="{{SITE_ROOT}}addcat.php"><i class="icon-tags"></i> Categories</a></li>
-						<li class="{% if title == 'Stats' %}active{% endif %}"><a href="{{SITE_ROOT}}stats.php"><i class="icon-tasks"></i> Stats</a></li>
-						<li class="{% if title == 'Setting' %}active{% endif %}"><a href="{{SITE_ROOT}}setting.php"><i class="icon-cog"></i> Settings</a></li>
-						<li class="{% if title == 'Profile' %}active{% endif %}"><a href="{{SITE_ROOT}}profile.php"><i class="icon-user"></i> Profile</a></li>
+						<li class="{%if title == 'Home' %}active{% endif %}"><a href="{% url hesab.views.main_page %}"><i class="icon-home"></i> Home</a></li>
+						<li class="{% if title == 'Add Category' %} active {% endif %}"><a href="{% url hesab.views.add_cat %}"><i class="icon-tags"></i> Categories</a></li>
+						<li class="{% if title == 'Stats' %}active{% endif %}"><a href="{% url hesab.views.stat %}"><i class="icon-tasks"></i> Stats</a></li>
 					</ul>
 				</div><!--/.well -->
 			</div><!--/span-->

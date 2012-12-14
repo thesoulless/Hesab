@@ -1,0 +1,56 @@
+{% extends "login_base.html" %}
+{% comment %}
+
+Main page of django_consultant's website.
+
+{% endcomment %}
+
+{% block head %}
+    <title>Django Consultants</title>
+{% endblock %}
+
+{% block body %}
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span10" style="">						
+				
+				{% if success_message %}
+				<div class="alert alert-success">
+					<strong>Well done!</strong> {{ success_message }}
+				</div>
+				{% endif %}
+
+				{% if failur_message %}
+				<div class="alert alert-error">
+					<strong>Oh!</strong> {{ failur_message }}
+				</div>
+				{% endif %}
+				<form class="well" method="post" action=".">{% csrf_token %}
+					<fieldset>
+						<legend>Add a category:</legend>
+						<div class="control-group">
+							<div class="control-group {if isset($catError) nocache} error{/if}">
+								<label class="control-label" for="cat">Category : </label>
+								<div class="controls form-inline">
+									<input class="input-medium" id="cat" type="text" name="cat" />
+									{% if cat_error and catError == 'Empty' %}<span class="help-inline">Category cannot be empty!</span>{% endif %}
+									{% if cat_error and cat_error == 'Invalid' %}<span class="help-inline">Invalid category!</span>{% endif %}
+									<p class="help-block">Ex: Food (Use same format for all)</p>
+								</div>
+							</div>
+							<dic class="control-group">
+								<label class="control-label" for="cat-show">Category Name : </label>
+								<div class="controls">
+									<input class="input-medium" id="cat-show" type="text" name="cat-show" />					
+									<p class="help-block">(Optional) Ex: غذا. This will be displayed in site.</p>
+								</div>
+							</div>
+							<button class="btn btn-primary" id="submit" type="submit" name="submit"><i class="icon-plus-sign icon-white"></i> Add</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

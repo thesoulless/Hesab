@@ -24,10 +24,10 @@ Main page of django_consultant's website.
 				</div>
 				{% endif %}
 
-				<form method="post" action="{$SCRIPT_NAME}" class="form-horizontal">
+				<form method="post" action="." class="form-horizontal">{% csrf_token %}
 					<fieldset>
 					<legend>Purchase submit:</legend>
-					{% if success_message != Null %}
+					{% if success_message %}
 					<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>
 						<strong>Well done!</strong> {{ success_message }}
 					</div>
@@ -42,9 +42,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="one-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="one-dp" readonly>
 							</div>
 						</div>
 					</div>
@@ -59,9 +59,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">  
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="two-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="two-dp" readonly>
 							</div>
 						</div>
 					</div>
@@ -76,9 +76,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">  
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="three-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="three-dp" readonly>
 							</div>
 						</div>
 					</div>
@@ -93,9 +93,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">  
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="four-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="four-dp" readonly>
 							</div>
 						</div>
 					</div>
@@ -110,9 +110,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">  
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">  
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="five-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="five-dp" readonly>
 							</div>
 						</div>
 					</div>
@@ -128,9 +128,9 @@ Main page of django_consultant's website.
 							{% endfor %}
 							</select>
 
-							<div class="date dp" data-date="{$today}" data-date-format="yyyy-mm-dd">
+							<div class="date dp" data-date="{{ today|date:'Y-m-d' }}" data-date-format="yyyy-mm-dd">
 								<span class="add-on"><i class="icon-th"></i></span>
-								<input class="span2 date-input" size="16" type="text" value="{$today}" name="six-dp" readonly>
+								<input class="span2 date-input" size="16" type="text" value="{{ today|date:'Y-m-d' }}" name="six-dp" readonly>
 							</div>
 						</div>
 					</div>
