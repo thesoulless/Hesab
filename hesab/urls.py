@@ -16,4 +16,5 @@ urlpatterns = patterns('',
 	(r'^logout/$', logout_page),
 	(r'^addcat/$', add_cat),
 	(r'^stat/$', stat),
+	(r'^data/$', data),
 )

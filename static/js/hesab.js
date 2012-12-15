@@ -11,7 +11,9 @@
 	
 	var requestData = function() {
 		$.ajax({
-			url: './request.php',			
+			url: '/data/',
+			crossDomain: false,
+			type: 'post',
 			data: { date_chart: 1, date_start: $('#startDate').html(), date_end: $('#endDate').html()},
 			success: function(points) {
 				var min = 100000000
@@ -20,8 +22,14 @@
 				var lines = [],
                 listen = false,
                 date, allH = [], allN = [];
-                    
+                //var obj = jQuery.parseJSON(points)
+                $.each(points, function(index, element) {			        
+					alert(index)
+			    })
+                alert(points)
+
 				for (var i = 0; i < points.length; i++) {
+					//alert(points[i])
 					var startDate = sql2js(points[i][0]) //.valueOf()
 					//startDate.setHour(i * 2)
 					var i1 = 0;
@@ -138,36 +146,8 @@
     
             tooltip: {
                 shared: true,
-                crosshairs: true,
-				//headerFormat: '<b>{series.name}</b><br />',
-				//headerFormat: '<b>{point.key}</b><br />{series.name}<br />',
-                //pointFormat: 'x = {point.x}, y = {point.y}'
-            },
-			/*
-            plotOptions: {
-                series: {
-                    cursor: 'pointer',
-                    point: {
-                        events: {
-                            click: function() {
-                                hs.htmlExpand(null, {
-                                    pageOrigin: {
-                                        x: this.pageX,
-                                        y: this.pageY
-                                    },
-                                    headingText: this.series.name,
-                                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) +':<br/> '+
-                                        this.y +' visits',
-                                    width: 200
-                                });
-                            }
-                        }
-                    },
-                    marker: {
-                        lineWidth: 1
-                    }
-                }
-            },*/
+                crosshairs: true,				
+            },			
 
     	    credits: {
 		enabled: true,
@@ -190,8 +170,8 @@
             }]
         });
         
-        $.ajax({
-			url: './request.php',			
+        /*$.ajax({
+			url: './data/',			
 			data: { date_sum: 1, date_start: $('#startDate').html(), date_end: $('#endDate').html()},
 			success: function(data) {
 				$("#ntotal").html(data[0][0])
@@ -202,7 +182,7 @@
 		});
 
 		$.ajax({
-			url: './request.php',
+			url: './data/',
 			dataType: 'json',
 			data: { date_cat: 1, date_start: $('#startDate').html(), date_end: $('#endDate').html()},
 			success: function(data) {				
@@ -214,141 +194,7 @@
 				};
 			},
 			cache: false
-		});
+		});*/
 	})
   })
 }(window.jQuery)
-
-/*	
-		chart = new Highcharts.StockChart({
-			chart: {
-				renderTo: 'dateChart',
-				events: {
-					load: requestData
-				}
-			},			
-			rangeSelector : {
-				buttons: [{
-					type: 'day',
-					count: 1,
-					text: '1d'
-				}, {
-					type: 'month',
-					count: 1,
-					text: '1m'
-				}, {
-					type: 'month',
-					count: 3,
-					text: '3m'
-				}, {
-					type: 'month',
-					count: 6,
-					text: '6m'
-				}, {
-					type: 'year',
-					count: 1,
-					text: '1y'
-				}, {
-					type: 'all',
-					text: 'All'
-				}],
-                selected : 5
-            },
-			title: {
-				text: 'Costs'
-			},
-			xAxis: {
-				type: 'Cost',
-				tickPixelInterval: 100,
-				maxZoom: 60 * 60 * 60 * 6 * 1000
-			},
-			yAxis: {				
-				minRange: 100,
-				min : 0,				
-				title: {
-					text: 'Cost / 10',
-					margin: 80
-				}
-			},
-			credits: {
-				enabled: true,
-				href: "http://www.soulless.ir/",
-				text: "Soulless"
-			},
-			
-			series: [{
-				name: 'Value',
-				
-				data: []
-			}]
-			
-			,
-			series: [{
-				name: 'Tokyo',
-				data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-			}, {
-				name: 'New York',
-				data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-			}, {
-				name: 'Berlin',
-				data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-			}, {
-				name: 'London',
-				data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-			}]
-			
-			
-			chart = new Highcharts.Chart({
-			chart: {
-				renderTo: 'dateChart',
-				type: 'line',
-				marginRight: 130,
-				marginBottom: 25
-			},
-			title: {
-				text: 'Pays',
-				x: -20 //center
-			},
-			xAxis: {
-				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-					'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-			},
-			yAxis: {
-				title: {
-					text: 'Cost'
-				},
-				plotLines: [{
-					value: 0,
-					width: 1,
-					color: '#808080'
-				}]
-			},
-			tooltip: {
-				formatter: function() {
-						return '<b>'+ this.series.name +'</b><br/>'+
-						this.x +': '+ this.y +'°C';
-				}
-			},
-			legend: {
-				layout: 'vertical',
-				align: 'right',
-				verticalAlign: 'top',
-				x: -10,
-				y: 100,
-				borderWidth: 0
-			},
-			series: [{
-				name: 'Tokyo',
-				data: [(10000, 7.0), 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-			}, {
-				name: 'New York',
-				data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-			}, {
-				name: 'Berlin',
-				data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-			}, {
-				name: 'London',
-				data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-			}]
-		});
-		})*/

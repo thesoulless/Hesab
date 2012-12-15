@@ -1,0 +1,74 @@
+{% extends "login_base.html" %}
+{% comment %}
+
+Main page of django_consultant's website.
+
+{% endcomment %}
+
+{% block head %}
+    <title>Hesab | {{title}}</title>
+{% endblock %}
+
+{% block body %}
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span12" style="">
+				{% if login_warning %}
+				<div class="alert">
+					<strong>Warning!</strong> {{login_warning}}
+				</div>
+				{% endif %}
+				<div class="well">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date<a href="#" class="btn small dp" id="dp4" data-date-format="yyyy-mm-dd" data-date="{{ today|date:'Y-m-d' }}">Change</a></th>
+								<th>End date<a href="#" class="btn small dp" id="dp5" data-date-format="yyyy-mm-dd" data-date="{{ today|date:'Y-m-d' }}">Change</a></th>
+								<th><button class="btn" id="showDateChart">Show</button></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="startDate">{{ today|date:'Y-m-d' }}</td>
+								<td id="endDate">{{ today|date:'Y-m-d' }}</td>
+							</tr>
+						</tbody>
+					</table>																								
+				</div>
+
+				<div class="well">
+					<div id="dateChart" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+					<div class="form-inline">
+						<label class="control-label" for="ntotal">First: </label><span id="ntotal"></span>
+						<label class="control-label" for="htotal">Sec: </label><span id="htotal"></span>
+						<label class="control-label" for="alltotal">Total: </label><span id="alltotal"></span>
+					</div>
+				</div><!-- Well -->
+
+				<div>
+					<table class="table table-striped table-bordered">
+					  <thead>
+					  	<tr>
+					  		<th></th>
+					  		{% for cat in categories %}
+									<th>{{ cat.cat_display }}</th>
+							{% endfor %}
+					  	</tr>
+					  </thead>
+
+					  <tbody>
+					  	<tr id="n-cat-costs">
+					  		<td>First: </td>
+					  	</tr>
+
+					  	<tr id="h-cat-costs">
+					  		<td>Sec: </td>
+					  	</tr>
+					  </tbody>
+					</table>
+				</div><!-- well -->
+			</div>						
+		</div>					
+	</div>												
+</div>
+{% endblock %}

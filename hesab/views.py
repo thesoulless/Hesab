@@ -6,7 +6,12 @@ from django.template import RequestContext
 from hesab.models import *
 from datetime import datetime, date
 from jalali import GregorianToJalali, JalaliToGregorian
+from django.utils import simplejson as json
+from dateutil.parser import parse
 import time
+from django.views.decorators.csrf import csrf_exempt
+
+from django.http import HttpResponse
 
 @login_required
 def main_page(request):
@@ -168,11 +173,88 @@ def add_cat(request):
 
 
 @login_required
-def stat(request):
+def stat(request):	
 	categories = Category.objects.all().order_by('-cat_used')
-	today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).g_to_j.getJalaliList()	
+	today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
 	today = date(today_list[0], today_list[1], today_list[2])
 	return render_to_response('hesab/stat.html', {
     	'title': 'Stat',
     	'today': today,
     	'categories': categories}, context_instance=RequestContext(request))
+
+
+@login_required
+@csrf_exempt
+def data(request):
+	#import pdb; pdb.set_trace()
+	response = {}
+	if request.is_ajax():
+		if request.method == 'POST':
+				if request.POST.get('date_chart', ''):
+					#datetime.strptime(time2					
+					end_date = ""
+					start_date = datetime.strptime(request.POST['date_start'], "%Y-%m-%d")
+					if not request.POST.get('date_end', ''):
+						today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
+						today = date(today_list[0], today_list[1], today_list[2])
+						end_date = today
+					else:
+						end_date = datetime.strptime(request.POST['date_end'], "%Y-%m-%d")
+
+					sum = 0
+					date_temp = ""
+					sums = {}
+					sums_t = ()
+
+					users = User.objects.all()
+					calcs_first = Calcs.objects.filter(user=users[0], pay_date__range=(start_date, end_date)).order_by('pay_date')
+					calcs_second = Calcs.objects.filter(user=users[1], pay_date__range=(start_date, end_date)).order_by('pay_date')
+					
+					for calc in calcs_first:
+						if sum == 0:
+							date_temp = calc.pay_date
+							sum = int(calc.cost)
+						else:
+							if calc.pay_date == date_temp:
+								sum += int(calc.cost)
+							else:
+								sums[str(date_temp)] = sum
+								sums_t = sums_t + (sums,)
+								sums = {}
+								sum = int(calc.cost)
+								date_temp = calc.pay_date
+
+					if sum > 0:
+						sums[str(date_temp)] = sum
+						sums_t = sums_t + (sums,)
+						sums = {}
+										
+					response[users[0].username] = sums_t
+					
+					sum = 0;
+					date_temp = ""
+					sums = {}
+					sums_t2 = ()
+
+					for calc in calcs_second:
+						if sum == 0:
+							date_temp = calc.pay_date
+							sum = int(calc.cost)
+						else:
+							if calc.pay_date == date_temp:
+								sum += int(calc.cost)
+							else:
+								sums[str(date_temp)] = sum
+								sums_t2 = sums_t2 + (sums,)
+								sums = {}
+								sum = int(calc.cost)
+								date_temp = calc.pay_date
+
+					if sum > 0:
+						sums[str(date_temp)] = sum
+						sums_t2 = sums_t2 + (sums,)
+						sums = {}
+
+					response[users[1].username] = sums_t2
+					
+	return HttpResponse(json.dumps(response), mimetype="application/json")
