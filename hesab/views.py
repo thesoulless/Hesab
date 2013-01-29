@@ -168,7 +168,6 @@ def add_cat(request):
 		'failur_message': failur_message,
 		'cat_error':cat_error,
 		'title': 'Add Category',
-		'SITE_ROOT': SITE_ROOT,
 		}, context_instance=RequestContext(request))
 
 
@@ -177,9 +176,13 @@ def stat(request):
 	categories = Category.objects.all().order_by('-cat_used')
 	today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
 	today = date(today_list[0], today_list[1], today_list[2])
+
+	users = User.objects.all()
 	return render_to_response('hesab/stat.html', {
     	'title': 'Stat',
     	'today': today,
+    	'first_user': users[0].username,
+    	'second_user': users[1].username,
     	'categories': categories}, context_instance=RequestContext(request))
 
 
@@ -190,71 +193,197 @@ def data(request):
 	response = {}
 	if request.is_ajax():
 		if request.method == 'POST':
-				if request.POST.get('date_chart', ''):
-					#datetime.strptime(time2					
-					end_date = ""
-					start_date = datetime.strptime(request.POST['date_start'], "%Y-%m-%d")
-					if not request.POST.get('date_end', ''):
-						today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
-						today = date(today_list[0], today_list[1], today_list[2])
-						end_date = today
+			if request.POST.get('date_chart', ''):
+				#datetime.strptime(time2					
+				end_date = ""
+				start_date = datetime.strptime(request.POST['date_start'], "%Y-%m-%d")
+				if not request.POST.get('date_end', ''):
+					today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
+					today = date(today_list[0], today_list[1], today_list[2])
+					end_date = today
+				else:
+					end_date = datetime.strptime(request.POST['date_end'], "%Y-%m-%d")
+
+				sum = 0
+				date_temp = ""
+				sums = {}
+				_dates = {}
+				sums_t = ()
+				_dates_t = ()
+				_sums_dates = ()
+
+				users = User.objects.all()
+				calcs_first = Calcs.objects.filter(user=users[0], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				calcs_second = Calcs.objects.filter(user=users[1], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				
+				for calc in calcs_first:
+					if sum == 0:
+						date_temp = calc.pay_date
+						sum = int(calc.cost)
 					else:
-						end_date = datetime.strptime(request.POST['date_end'], "%Y-%m-%d")
+						if calc.pay_date == date_temp:
+							sum += int(calc.cost)
+						else:
+							sums['date'] = str(date_temp)
+							sums['sum'] = sum
+							sums['name'] = users[0].username
+							_sums_dates = _sums_dates + (sums,)
+							sums = {}
+							_dates = {}
+							sum = int(calc.cost)
+							date_temp = calc.pay_date
 
+				if sum > 0:
+					sums['date'] = str(date_temp)
+					sums['sum'] = sum
+					sums['name'] = users[0].username
+					_sums_dates = _sums_dates + (sums,)
+					sums = {}
+					_dates = {}
+
+				response['costs1'] = _sums_dates
+
+				
+				sum = 0;
+				date_temp = ""
+				sums_t2 = ()
+
+				sums = {}
+				_dates = {}
+				sums_t = ()
+				_dates_t = ()
+				_sums_dates = ()
+
+
+				for calc in calcs_second:
+					if sum == 0:
+						date_temp = calc.pay_date
+						sum = int(calc.cost)
+					else:
+						if calc.pay_date == date_temp:
+							sum += int(calc.cost)
+						else:
+							sums['date'] = str(date_temp)
+							sums['sum'] = sum
+							sums['name'] = users[1].username
+							_sums_dates = _sums_dates + (sums,)								
+							sums = {}
+							_dates = {}
+							sum = int(calc.cost)
+							date_temp = calc.pay_date
+
+							'''
+							sums[str(date_temp)] = sum
+							sums_t2 = sums_t2 + (sums,)
+							sums = {}
+							sum = int(calc.cost)
+							date_temp = calc.pay_date
+							'''
+
+				if sum > 0:
+					sums['date'] = str(date_temp)
+					sums['sum'] = sum
+					sums['name'] = users[0].username
+					_sums_dates = _sums_dates + (sums,)
+					sums = {}
+					_dates = {}
+
+					'''
+					sums[str(date_temp)] = sum
+					sums_t2 = sums_t2 + (sums,)
+					sums = {}
+					'''
+
+				response['costs2'] = _sums_dates
+
+				return HttpResponse(json.dumps(response), mimetype="application/json")
+
+
+			if request.POST.get('date_sum', ''):
+				end_date = ""
+				start_date = datetime.strptime(request.POST['date_start'], "%Y-%m-%d")
+				if not request.POST.get('date_end', ''):
+					today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
+					today = date(today_list[0], today_list[1], today_list[2])
+					end_date = today
+				else:
+					end_date = datetime.strptime(request.POST['date_end'], "%Y-%m-%d")
+
+				sum = 0
+				first_sum = 0
+				second_sum = 0
+				sums = ()
+
+
+				users = User.objects.all()
+				calcs_first = Calcs.objects.filter(user=users[0], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				calcs_second = Calcs.objects.filter(user=users[1], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				
+				for calc in calcs_first:						
+					sum += int(calc.cost)						
+
+				first_sum = sum
+				
+				sum = 0
+
+				for calc in calcs_second:
+					sum += int(calc.cost)						
+
+				second_sum = sum
+
+				#response['costs2'] = _sums_dates
+				#sums = (first_sum, second_sum)
+				response['first_sum'] = first_sum
+				response['second_sum'] = second_sum
+
+				return HttpResponse(json.dumps(response), mimetype="application/json")
+
+
+
+			if request.POST.get('date_cat', ''):
+				end_date = ""
+				start_date = datetime.strptime(request.POST['date_start'], "%Y-%m-%d")
+				if not request.POST.get('date_end', ''):
+					today_list = GregorianToJalali(date.today().year, date.today().month, date.today().day).getJalaliList()	
+					today = date(today_list[0], today_list[1], today_list[2])
+					end_date = today
+				else:
+					end_date = datetime.strptime(request.POST['date_end'], "%Y-%m-%d")
+
+				sum = 0
+				first_cats = {}
+				second_cats = {}
+				sums = ()
+
+
+
+				users = User.objects.all()
+				calcs_first = Calcs.objects.filter(user=users[0], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				calcs_second = Calcs.objects.filter(user=users[1], pay_date__range=(start_date, end_date)).order_by('pay_date')
+				cats = Category.objects.all().order_by('-cat_used')
+				
+				for cat in cats:
 					sum = 0
-					date_temp = ""
-					sums = {}
-					sums_t = ()
-
-					users = User.objects.all()
-					calcs_first = Calcs.objects.filter(user=users[0], pay_date__range=(start_date, end_date)).order_by('pay_date')
-					calcs_second = Calcs.objects.filter(user=users[1], pay_date__range=(start_date, end_date)).order_by('pay_date')
-					
 					for calc in calcs_first:
-						if sum == 0:
-							date_temp = calc.pay_date
-							sum = int(calc.cost)
-						else:
-							if calc.pay_date == date_temp:
-								sum += int(calc.cost)
-							else:
-								sums[str(date_temp)] = sum
-								sums_t = sums_t + (sums,)
-								sums = {}
-								sum = int(calc.cost)
-								date_temp = calc.pay_date
-
-					if sum > 0:
-						sums[str(date_temp)] = sum
-						sums_t = sums_t + (sums,)
-						sums = {}
-										
-					response[users[0].username] = sums_t
+						if calc.cat_id == cat.id:
+							sum += calc.cost
+					first_cats[cat.cat_display] = sum
 					
-					sum = 0;
-					date_temp = ""
-					sums = {}
-					sums_t2 = ()
+				sums = (first_cats,)
 
+				response['first_cats'] = sums
+
+				sums = ()
+				sum = 0
+				for cat in cats:
+					sum = 0
 					for calc in calcs_second:
-						if sum == 0:
-							date_temp = calc.pay_date
-							sum = int(calc.cost)
-						else:
-							if calc.pay_date == date_temp:
-								sum += int(calc.cost)
-							else:
-								sums[str(date_temp)] = sum
-								sums_t2 = sums_t2 + (sums,)
-								sums = {}
-								sum = int(calc.cost)
-								date_temp = calc.pay_date
-
-					if sum > 0:
-						sums[str(date_temp)] = sum
-						sums_t2 = sums_t2 + (sums,)
-						sums = {}
-
-					response[users[1].username] = sums_t2
+						if calc.cat_id == cat.id:
+							sum += calc.cost					
+					second_cats[cat.cat_display] = sum
 					
-	return HttpResponse(json.dumps(response), mimetype="application/json")
+				sums = (second_cats,)				
+				
+				response['second_cats'] = sums
+
+				return HttpResponse(json.dumps(response), mimetype="application/json")

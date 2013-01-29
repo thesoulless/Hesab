@@ -39,8 +39,8 @@ Main page of django_consultant's website.
 				<div class="well">
 					<div id="dateChart" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 					<div class="form-inline">
-						<label class="control-label" for="ntotal">First: </label><span id="ntotal"></span>
-						<label class="control-label" for="htotal">Sec: </label><span id="htotal"></span>
+						<label class="control-label" for="ntotal">{{ first_user }}: </label><span id="ntotal"></span>
+						<label class="control-label" for="htotal">{{ second_user }}: </label><span id="htotal"></span>
 						<label class="control-label" for="alltotal">Total: </label><span id="alltotal"></span>
 					</div>
 				</div><!-- Well -->
@@ -58,11 +58,11 @@ Main page of django_consultant's website.
 
 					  <tbody>
 					  	<tr id="n-cat-costs">
-					  		<td>First: </td>
+					  		<td>{{ first_user }}: </td>
 					  	</tr>
 
 					  	<tr id="h-cat-costs">
-					  		<td>Sec: </td>
+					  		<td>{{ second_user }}: </td>
 					  	</tr>
 					  </tbody>
 					</table>

@@ -130,7 +130,9 @@
 			$('#endDate').html(ev.date.getFullYear() + '-' + (((ev.date.getMonth()+1) < 10) ? '0'+(ev.date.getMonth()+1) : (ev.date.getMonth()+1)) +
 								'-' + ((ev.date.getDate() < 10) ? '0'+(ev.date.getDate()) : ev.date.getDate()));
 		});
-		$('#about').modal(options);									
+		
+		$('#about').modal({show: false});
+		
 	</script>
 
 </body>

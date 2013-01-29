@@ -4,10 +4,10 @@
 
   $(function(){
     $('section [href^=#]').click(function (e) {
-      e.preventDefault()
+      e.preventDefault();
     })
 	
-	var chart
+	var chart;
 	
 	var requestData = function() {
 		$.ajax({
@@ -21,46 +21,74 @@
 				
 				var lines = [],
                 listen = false,
-                date, allH = [], allN = [];
-                //var obj = jQuery.parseJSON(points)
-                $.each(points, function(index, element) {			        
-					alert(index)
-			    })
-                alert(points)
+                date, first = [], second = [];
 
-				for (var i = 0; i < points.length; i++) {
-					//alert(points[i])
-					var startDate = sql2js(points[i][0]) //.valueOf()
-					//startDate.setHour(i * 2)
-					var i1 = 0;
-					if (points[i-1])
-						i1 = (1000 * 60 * 60 * 6 * (i-1))
-					points[i][0] = startDate.valueOf() + (1000 * 60 * 60 * 3 * i) - i1
-					points[i][1] = points[i][1]/10
-					var series = chart.series[0],
-						shift = series.data.length > 20;					
+                
+                //var prev = 0
+                var _points = []
+                var firstName, secondName
+
+                $.each(points.costs1, function(index, element) {
+                	var startDate = sql2js(element.date)
+					firstName = element.name
+
+					var i1 = 0
+					if (index > 0)
+						i1 = (1000 * 60 * 60 * 6 * (index-1) )
+
+					_points[index] = []
+					_points[index][0] = startDate.valueOf() + (1000 * 60 * 60 * 3 * index) - i1
+					_points[index][1] = element.sum/10					
 								
-					date = startDate.valueOf() //Date.parse(line[0] +' UTC');
+					date = startDate.valueOf()
 					
-					if (points[i][2] == 1) {
-						allN.push([
-							date,
-							parseInt((points[i][1] * 10), 10)
-						]);
-					} else {
-						allH.push([
-							date,							
-							parseInt((points[i][1]* 10), 10)
-						]);
-					}
-				}	
+					first.push([
+						date,
+						parseInt((_points[index][1] * 10), 10)
+					]);
 
-				if (allN)
-					chart.series[0].setData (allN);
+                })
 
-				if (allH)
-					chart.series[1].setData (allH);
+                _points = []
+
+                $.each(points.costs2, function(index, element) {                
+                	var startDate = sql2js(element.date)
+                	secondName = element.name
+
+					var i1 = 0
+					if (index)
+						i1 = (1000 * 60 * 60 * 6 * (index-1) )					
+
+					_points[index] = []
+					_points[index][0] = startDate.valueOf() + (1000 * 60 * 60 * 3 * index) - i1
+					_points[index][1] = element.sum/10
+								
+					date = startDate.valueOf()
+					
+					second.push([
+						date,							
+						parseInt((_points[i][1]* 10), 10)
+					]);
+
+                })
+
+
+                chart.series[0].name = firstName
+                chart.series[1].name = secondName
+
+				if (first)
+					chart.series[0].setData (first);
+
+				if (second)
+					chart.series[1].setData (second);
+
+				var series = chart.series[0];
+				chart.shift = series.data.length > 20;
+
+				$(chart.legend.allItems[0].legendItem.element.childNodes).text(firstName)
+                $(chart.legend.allItems[1].legendItem.element.childNodes).text(secondName)
 			},
+
 			cache: false
 		});
 	}
@@ -156,45 +184,58 @@
 	    },
     
             series: [{
-                name: 'First',
+                //name: 'First',
                 lineWidth: 4,
                 marker: {
                     radius: 4
                 }
             }, {
-                name: 'Sec',
+                //name: 'Sec',
 				lineWidth: 4,
                 marker: {
                     radius: 4
                 }
             }]
         });
-        
-        /*$.ajax({
-			url: './data/',			
+
+
+		$.ajax({
+			url: '/data/',
+			crossDomain: false,
+			type: 'post',
 			data: { date_sum: 1, date_start: $('#startDate').html(), date_end: $('#endDate').html()},
-			success: function(data) {
-				$("#ntotal").html(data[0][0])
-				$("#htotal").html(data[1][0])
-				$("#alltotal").html(data[1][0] + data[0][0])
+			success: function(data) {				
+				$("#ntotal").html(data.first_sum)
+				$("#htotal").html(data.second_sum)
+				$("#alltotal").html(data.first_sum + data.second_sum)
 			},
 			cache: false
 		});
 
 		$.ajax({
-			url: './data/',
-			dataType: 'json',
+			url: '/data/',
+			crossDomain: false,
+			type: 'post',
+			//dataType: 'json',
 			data: { date_cat: 1, date_start: $('#startDate').html(), date_end: $('#endDate').html()},
-			success: function(data) {				
-				for (var i = 0; i < data[0].length; i++) {					
-					$("#n-cat-costs").append("<td>" + data[0][i] + "</td>")
-				};
-				for (var i = 0; i < data[1].length; i++) {
-					$("#h-cat-costs").append("<td>" + data[1][i] + "</td>")
-				};
+			success: function(data) {
+				$('#h-cat-costs td:not(:first)').remove()
+				$('#n-cat-costs td:not(:first)').remove()
+				$.each(data.second_cats, function(index, element) {
+					$.each(element, function(index2, element2) {
+						$("#n-cat-costs").append("<td>" + element2 + "</td>")
+					})
+				})
+
+				$.each(data.first_cats, function(index, element) {
+					$.each(element, function(index2, element2) {
+						$("#h-cat-costs").append("<td>" + element2 + "</td>")
+					})
+				})				
 			},
 			cache: false
-		});*/
+		});
+        
 	})
   })
 }(window.jQuery)
