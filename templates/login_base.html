@@ -112,12 +112,12 @@
 	<script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
 	<script src="{{ STATIC_URL }}js/bootstrap-datepicker.js"></script>
 	
-	<script src="{{ STATIC_URL }}/js/hesab.js"></script>
+	<script src="{{ STATIC_URL }}js/hesab.js"></script>
 	<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
 	<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
 	<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css" />
 	
-	<script src="{{ STATIC_URL }}/js/highcharts/highcharts.js"></script>
+	<script src="{{ STATIC_URL }}js/highcharts/highcharts.js"></script>
 	<!--<script src="./assets/js/highcharts/modules/exporting.js"></script>-->
 	
 	<script>
@@ -130,7 +130,9 @@
 			$('#endDate').html(ev.date.getFullYear() + '-' + (((ev.date.getMonth()+1) < 10) ? '0'+(ev.date.getMonth()+1) : (ev.date.getMonth()+1)) +
 								'-' + ((ev.date.getDate() < 10) ? '0'+(ev.date.getDate()) : ev.date.getDate()));
 		});
-		$('#about').modal(options);									
+		
+		$('#about').modal({show: false});
+		
 	</script>
 
 </body>
